@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+.langgraph_api/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.vscode/

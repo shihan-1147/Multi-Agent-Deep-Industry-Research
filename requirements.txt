@@ -1,0 +1,17 @@
+langchain
+langchain-community
+langchain-openai
+langgraph
+aiosqlite
+dashscope
+fastapi
+uvicorn
+sse-starlette
+streamlit
+sseclient-py
+requests
+tavily-python
+langsmith
+duckduckgo-search
+ddgs
+python-dotenv

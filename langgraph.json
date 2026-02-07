@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "langchain",
+    "langchain-community",
+    "langchain-openai",
+    "langgraph",
+    "tavily-python",
+    "python-dotenv",
+    "duckduckgo-search"
+  ],
+  "graphs": {
+    "research_graph": "agent/dev_graph.py:graph"
+  },
+  "env": ".env"
+}
