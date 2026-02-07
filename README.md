@@ -1,6 +1,6 @@
-# 🤖 Multi-Agent Deep Industry Research
-
 <div align="center">
+
+# 🤖 Multi-Agent Deep Industry Research
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
 [![LangGraph](https://img.shields.io/badge/AI-LangGraph-orange?style=for-the-badge)](https://www.langchain.com/langgraph)
