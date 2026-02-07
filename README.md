@@ -131,9 +131,6 @@ graph TD
 
 ## 📂 项目结构
 
-<details>
-<summary>点击展开项目目录结构</summary>
-
 ```text
 .
 ├── agent/                  # 🤖 Agent 核心逻辑
@@ -151,11 +148,6 @@ graph TD
 ├── requirements.txt        # 项目依赖
 └── README.md               # 项目文档
 ```
-</details>
-
-## 📈 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=shihan-1147/Multi-Agent-Deep-Industry-Research&type=Date)](https://star-history.com/#shihan-1147/Multi-Agent-Deep-Industry-Research&Date)
 
 ## 🤝 贡献
 
