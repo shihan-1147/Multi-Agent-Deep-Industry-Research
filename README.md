@@ -1,89 +1,138 @@
-# 🤖 基于 LangGraph 的多智能体深度行业研报生成系统
+# 🤖 Multi-Agent Deep Industry Research
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
-[![LangGraph](https://img.shields.io/badge/AI-LangGraph-orange?style=flat-square)](https://www.langchain.com/langgraph)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-FF4B4B?style=flat-square&logo=streamlit)](https://streamlit.io/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+<div align="center">
 
-> 一个智能化的行业研究助手，能够自动完成**规划、检索、写作与审核**全流程，并支持**人在回路 (Human-in-the-loop)** 的交互式反馈与优化。
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/AI-LangGraph-orange?style=for-the-badge)](https://www.langchain.com/langgraph)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+**Next-Gen Industry Research Assistant Powered by Multi-Agent Collaboration**
+
+[快速开始](#-快速开始) • [核心特性](#-核心特性) • [系统架构](#-系统架构) • [贡献](#-贡献)
+
+</div>
 
 ---
 
+## 📖 简介
+
+**Multi-Agent Deep Industry Research** 是一个智能化的行业研究助手，旨在通过 AI 智能体协作，自动化完成从**规划、检索、写作到审核**的全流程。
+
+它不仅仅是一个简单的生成器，更是一个**具备反思能力**的系统。通过 LangGraph 的状态机机制，它能够自我检查、迭代优化，并支持**人在回路 (Human-in-the-loop)**，让专家在关键节点介入，确保产出报告的专业性与准确性。
+
 ## ✨ 核心特性
 
-- **🤖 多智能体协作**：Planner（规划）、Researcher（检索）、Writer（写作）、Reviewer（审核）分工明确，高效协同。
-- **🧠 深度推理与反思**：基于 LangGraph 的 StateGraph 架构，支持循环迭代与自我修正。
-- **🔄 人在回路 (HITL)**：关键节点支持人工介入（Approve/Reject），确保生成内容的准确性与可控性。
-- **⚡ 实时流式体验**：后端采用 FastAPI SSE 推送，前端 Streamlit 实时展示思考过程与日志。
-- **📚 强大的检索能力**：集成 Tavily Search（优先）与 DuckDuckGo，确保信息来源的时效性与广度。
-- **💾 完善的持久化**：基于 SQLite 的 Checkpoint 机制，支持断点续传与历史回溯。
+| 特性 | 描述 |
+| :--- | :--- |
+| **🤖 多智能体协作** | **Planner**（规划）、**Researcher**（检索）、**Writer**（写作）、**Reviewer**（审核）各司其职，模拟真实研究团队的工作流。 |
+| **🧠 深度反思机制** | 基于 **LangGraph** 构建状态机，支持循环迭代。Reviewer 可将任务打回给 Writer 重写或 Researcher 补充资料。 |
+| **🔄 人在回路 (HITL)** | 关键节点支持人工介入（Approve/Reject），用户可实时反馈意见，引导 Agent 进行针对性修改。 |
+| **⚡ 实时流式体验** | 后端采用 **FastAPI SSE** 推送，前端 **Streamlit** 实时展示 Agent 的思考过程、工具调用与中间产物。 |
+| **📚 混合检索增强** | 集成 **Tavily Search**（高质量研报源）与 **DuckDuckGo**（广泛搜索），确保信息来源的时效性与广度。 |
+| **💾 完备的持久化** | 基于 **SQLite** 的 Checkpoint 机制，支持会话记忆、断点续传与历史版本回溯。 |
 
 ## 🏗️ 系统架构
 
-系统采用微服务架构，前后端分离设计：
+系统采用清晰的微服务架构，前后端分离，确保了扩展性与维护性。
 
-![Agent Graph](artifacts/agent_graph.png)
+### 🔄 Agent 工作流 (Mermaid)
 
-*图：Agent 工作流状态机可视化*
+```mermaid
+graph TD
+    Start([🚀 Start]) --> Planner
+    Planner -- "Plan" --> Researcher
+    Researcher -- "Content" --> Writer
+    Writer -- "Draft" --> Reviewer
+    
+    subgraph "Review Loop"
+        Reviewer -- "Need more info" --> Researcher
+        Reviewer -- "Revise draft" --> Writer
+    end
+    
+    Reviewer -- "Approved" --> Human{👤 Human Check}
+    Human -- "Reject (Feedback)" --> Planner
+    Human -- "Approve" --> End([✅ Final Report])
+    
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#9f9,stroke:#333,stroke-width:2px
+    style Human fill:#ff9,stroke:#333,stroke-width:2px
+```
 
-- **Agent Layer**: LangGraph 驱动的智能体工作流。
-- **API Layer**: FastAPI 提供 RESTful 接口与 SSE 流服务。
-- **UI Layer**: Streamlit 提供友好的交互界面。
+### 🧱 技术栈架构
+
+- **Agent Layer**: LangGraph, LangChain
+- **LLM Layer**: Qwen-max, DeepSeek-V3 (via DashScope)
+- **Service Layer**: FastAPI, Uvicorn (Async/SSE)
+- **Interface Layer**: Streamlit
+- **Data Layer**: SQLite (aiosqlite)
 
 ## 🚀 快速开始
 
-### 前置条件
+### 🛠️ 前置条件
 
 - Python 3.10+
-- [DashScope API Key](https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key) (支持 Qwen/DeepSeek 等模型)
-- [Tavily API Key](https://tavily.com/) (推荐，用于高质量搜索)
+- [DashScope API Key](https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key)
+- [Tavily API Key](https://tavily.com/) (可选，推荐)
 
-### 1. 安装依赖
+### 📥 安装与运行
 
-```bash
-git clone https://github.com/shihan-1147/langgraph-multi-agent-research-report.git
-cd langgraph-multi-agent-research-report
-pip install -r requirements.txt
-```
+1.  **克隆仓库**
 
-### 2. 配置环境
+    ```bash
+    git clone https://github.com/shihan-1147/Multi-Agent-Deep-Industry-Research.git
+    cd Multi-Agent-Deep-Industry-Research
+    ```
 
-在项目根目录创建 `.env` 文件：
+2.  **安装依赖**
 
-```env
-# 必填
-DASHSCOPE_API_KEY=sk-your-api-key
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-# 选填（推荐用于增强搜索能力）
-TAVILY_API_KEY=tvly-your-api-key
-```
+3.  **配置环境变量**
 
-### 3. 启动服务
+    复制 `.env.example` (如果有) 或直接创建 `.env`：
 
-你需要打开两个终端分别启动后端和前端。
+    ```env
+    DASHSCOPE_API_KEY=sk-your-api-key
+    TAVILY_API_KEY=tvly-your-api-key  # Optional
+    ```
 
-**终端 1：启动后端 API**
+4.  **启动服务**
 
-```bash
-uvicorn backend.main:app --host 0.0.0.0 --port 8000
-```
+    需要分别启动后端与前端：
 
-**终端 2：启动前端 UI**
+    **Backend (Terminal 1)**
+    ```bash
+    uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    ```
 
-```bash
-streamlit run frontend/app.py
-```
+    **Frontend (Terminal 2)**
+    ```bash
+    streamlit run frontend/app.py
+    ```
 
-### 4. 开始使用
+5.  **开始体验**
 
-1. 访问浏览器：`http://localhost:8501`
-2. 在侧边栏输入研究主题（例如：“**2025年生成式AI在医疗领域的应用趋势**”）。
-3. 点击 **开始研究**。
-4. 观察 Agent 的实时思考与执行过程。
-5. 在审核阶段提供反馈或直接通过。
+    打开浏览器访问 `http://localhost:8501`，输入你的研究主题，开启 AI 研究之旅！
+
+## 🗺️ Roadmap
+
+- [x] 基础多智能体流程 (Planner -> Researcher -> Writer -> Reviewer)
+- [x] LangGraph 状态机与持久化
+- [x] FastAPI 后端与 SSE 流式输出
+- [x] Streamlit 交互界面与人工审核
+- [ ] **多格式导出**: 支持导出为 PDF, Word, Markdown
+- [ ] **更多搜索源**: 集成 Google Search, Bing Search
+- [ ] **知识库集成**: 支持 RAG (Retrieval-Augmented Generation) 挂载本地文档
+- [ ] **图表生成**: 自动根据数据生成统计图表
 
 ## 📂 项目结构
+
+<details>
+<summary>点击展开项目目录结构</summary>
 
 ```text
 .
@@ -102,19 +151,15 @@ streamlit run frontend/app.py
 ├── requirements.txt        # 项目依赖
 └── README.md               # 项目文档
 ```
+</details>
 
-## 🛠️ 技术栈
+## 📈 Star History
 
-- **LLM**: Qwen-max / DeepSeek-V3 (via DashScope)
-- **Framework**: [LangGraph](https://github.com/langchain-ai/langgraph), [LangChain](https://github.com/langchain-ai/langchain)
-- **Backend**: FastAPI, Uvicorn
-- **Frontend**: Streamlit
-- **Search**: Tavily API, DuckDuckGo
-- **Database**: SQLite (aiosqlite)
+[![Star History Chart](https://api.star-history.com/svg?repos=shihan-1147/Multi-Agent-Deep-Industry-Research&type=Date)](https://star-history.com/#shihan-1147/Multi-Agent-Deep-Industry-Research&Date)
 
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request！如果你有好的想法或建议，请随时联系。
+欢迎任何形式的贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解更多细节。
 
 ## 📄 许可证
 
